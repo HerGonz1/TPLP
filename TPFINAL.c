@@ -82,7 +82,7 @@ void mostrarCrucigrama(char crucigrama[TAMANO][TAMANO]) {
 
     for (int i = 0; i < TAMANO; i++) {
         for (int j = 0; j < TAMANO; j++) {
-            printf("%c ", crucigrama[i][j]);
+            printf("%c  ", crucigrama[i][j]);
         }
         printf("\n");
     }
@@ -92,13 +92,28 @@ int intentarColocarPalabra(char palabra[TAMANO], int fila, int columna, char dir
     int longitud = strlen(palabra);
 
     if ((direccion == 'H' && columna + longitud <= TAMANO) || (direccion == 'V' && fila + longitud <= TAMANO)) {
+        int cruzada = 0; // Variable para indicar si la palabra cruza con otra
+
         for (int i = 0; i < longitud; i++) {
             char c = crucigrama[(direccion == 'H') ? fila : fila + i][(direccion == 'H') ? columna + i : columna];
+
+            // Verificar si la palabra cruza con otra en la misma posición
             if (c != '_' && c != palabra[i]) {
-                return 0; // No se puede colocar la palabra en esta posición
+                cruzada = 1;
+                break;
             }
         }
-        return 1; // La palabra puede colocarse en esta posición
+
+        // Verificar si la palabra cruza con otra en alguna posición
+        if (!cruzada) {
+            for (int i = 0; i < longitud; i++) {
+                char c = crucigrama[(direccion == 'H') ? fila : fila + i][(direccion == 'H') ? columna + i : columna];
+                if (c != '_' && c != palabra[i]) {
+                    return 0; // No se puede colocar la palabra en esta posición
+                }
+            }
+            return 1; // La palabra puede colocarse en esta posición
+        }
     }
 
     return 0; // No se puede colocar la palabra fuera de los límites de la matriz
